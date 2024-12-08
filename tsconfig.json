@@ -1,16 +1,15 @@
 {
   "compilerOptions": {
     "target": "es2016",
-    "module": "commonjs",
+    "module": "nodeNext",
+    "moduleResolution": "nodeNext",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./node_modules/holysheets/dist/types/esm/src/*"]
-    }
+    "baseUrl": "."
   },
-  "include": ["*.ts"],
-  "exclude": ["node_modules"]
+  "include": ["*.ts", "jwt.ts"],
+  "exclude": ["node_modules"],
+  "lib": ["es2015"]
 }

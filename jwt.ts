@@ -11,6 +11,8 @@ const serviceAccountCredentials = JSON.parse(
   process.env.SERVICE_ACCOUNT_CREDENTIALS as string
 )
 
+
+
 /**
  * Initializes the HolySheets instance with Google Auth.
  *
@@ -19,22 +21,21 @@ const serviceAccountCredentials = JSON.parse(
 async function initializeHolySheets(): Promise<
   HolySheets<{ Name: string; Age: string }>
 > {
-  // Initialize Google Auth
-  const auth = new google.auth.GoogleAuth({
-    credentials: serviceAccountCredentials,
-    scopes: ['https://www.googleapis.com/auth/spreadsheets']
-  })
-
-  // Create an instance of HolySheets
-  const sheets = new HolySheets({
-    spreadsheetId,
-    auth
-  })
-
-  // Define the table (sheet) to operate on
-  const table = sheets.base<{ Name: string; Age: string }>('holysheets')
-
-  return table
+  try {
+    const auth = new google.auth.GoogleAuth({
+      credentials: serviceAccountCredentials,
+      scopes: ['https://www.googleapis.com/auth/spreadsheets']
+    })
+    const sheets = new HolySheets({
+      spreadsheetId,
+      auth
+    })
+    const table = sheets.base<{ Name: string; Age: string }>('holysheets')
+    return table
+  } catch (error) {
+    console.error('Erro ao inicializar HolySheets:', error)
+    throw error
+  }
 }
 
 /**
@@ -177,7 +178,10 @@ async function deleteFirstRecord(
 async function deleteMultipleRecords(
   table: HolySheets<{ Name: string; Age: string }>
 ) {
-  const criteria = { Name: 'Alice' }
+  const criteria = { Name: {
+      in: ['Alice', 'Charlie']
+    }
+  }
 
   try {
     await table.deleteMany({ where: criteria })
