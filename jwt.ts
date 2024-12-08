@@ -11,12 +11,19 @@ const serviceAccountCredentials = JSON.parse(
   process.env.SERVICE_ACCOUNT_CREDENTIALS as string
 )
 
-
+/**
+ * Helper function to log metadata
+ *
+ * @param metadata - Metadata object returned by operations
+ */
+async function logMetadata(metadata: any) {
+  console.log('📄 Metadata:', metadata)
+}
 
 /**
- * Initializes the HolySheets instance with Google Auth.
+ * Initializes the HolySheets instance with Google authentication.
  *
- * @returns An instance of HolySheets configured with authentication.
+ * @returns A HolySheets instance configured with authentication.
  */
 async function initializeHolySheets(): Promise<
   HolySheets<{ Name: string; Age: string }>
@@ -33,7 +40,7 @@ async function initializeHolySheets(): Promise<
     const table = sheets.base<{ Name: string; Age: string }>('holysheets')
     return table
   } catch (error) {
-    console.error('Erro ao inicializar HolySheets:', error)
+    console.error('Error initializing HolySheets:', error)
     throw error
   }
 }
@@ -51,18 +58,21 @@ async function insertRecords(table: HolySheets<{ Name: string; Age: string }>) {
   ]
 
   try {
-    await table.insert({ data: recordsToInsert })
-    console.log('✅ Successfully inserted records:')
+    // Include metadata in the insert operation
+    const result = await table.insert({ data: recordsToInsert }, { includeMetadata: true })
+    console.log('✅ Records inserted successfully:')
     recordsToInsert.forEach(record =>
       console.log(`   - ${record.Name}, Age: ${record.Age}`)
     )
+    // Log metadata
+    await logMetadata(result.metadata)
   } catch (error) {
     console.error('❌ Error inserting records:', error)
   }
 }
 
 /**
- * Fetches the first record matching the specified criteria.
+ * Fetches the first record that matches the specified criteria.
  *
  * @param table - The HolySheets table instance.
  */
@@ -72,9 +82,12 @@ async function fetchFirstRecord(
   const criteria = { Name: 'Alice' }
 
   try {
-    const record = await table.findFirst({ where: criteria })
+    // Include metadata in the fetch operation
+    const record = await table.findFirst({ where: criteria }, { includeMetadata: true })
     if (record) {
-      console.log('✅ Found first matching record:', record.data)
+      console.log('✅ First matching record found:', record.data)
+      // Log metadata
+      await logMetadata(record.metadata)
     } else {
       console.log('ℹ️ No matching record found for criteria:', criteria)
     }
@@ -84,7 +97,7 @@ async function fetchFirstRecord(
 }
 
 /**
- * Fetches all records matching the specified criteria.
+ * Fetches all records that match the specified criteria.
  *
  * @param table - The HolySheets table instance.
  */
@@ -94,12 +107,15 @@ async function fetchMultipleRecords(
   const criteria = { Name: 'Alice' }
 
   try {
-    const records = await table.findMany({ where: criteria })
+    // Include metadata in the fetch operation
+    const records = await table.findMany({ where: criteria }, { includeMetadata: true })
     if (records && records.data && records.data.length > 0) {
-      console.log(`✅ Found ${records.data.length} matching record(s):`)
+      console.log(`✅ ${records.data.length} record(s) found:`)
       records.data.forEach((record: { Name: string; Age: string }) =>
         console.log(`   - Row: `, record)
       )
+      // Log metadata
+      await logMetadata(records.metadata)
     } else {
       console.log('ℹ️ No matching records found for criteria:', criteria)
     }
@@ -109,7 +125,7 @@ async function fetchMultipleRecords(
 }
 
 /**
- * Updates the first record matching the specified criteria.
+ * Updates the first record that matches the specified criteria.
  *
  * @param table - The HolySheets table instance.
  */
@@ -120,18 +136,21 @@ async function updateFirstRecord(
   const updatedData = { Age: '31' }
 
   try {
-    await table.updateFirst({ where: criteria, data: updatedData })
+    // Include metadata in the update operation
+    const result = await table.updateFirst({ where: criteria, data: updatedData }, { includeMetadata: true })
     console.log(
-      '✅ Successfully updated the first matching record:',
-      updatedData
+      '✅ First matching record updated successfully:',
+      result.data
     )
+    // Log metadata
+    await logMetadata(result.metadata)
   } catch (error) {
     console.error('❌ Error updating first record:', error)
   }
 }
 
 /**
- * Updates all records matching the specified criteria.
+ * Updates all records that match the specified criteria.
  *
  * @param table - The HolySheets table instance.
  */
@@ -142,15 +161,18 @@ async function updateMultipleRecords(
   const updatedData = { Age: '32' }
 
   try {
-    await table.updateMany({ where: criteria, data: updatedData })
-    console.log('✅ Successfully updated all matching records:', updatedData)
+    // Include metadata in the update operation
+    const result = await table.updateMany({ where: criteria, data: updatedData }, { includeMetadata: true })
+    console.log('✅ All matching records updated successfully:', updatedData)
+    // Log metadata
+    await logMetadata(result.metadata)
   } catch (error) {
     console.error('❌ Error updating multiple records:', error)
   }
 }
 
 /**
- * Deletes the first record matching the specified criteria.
+ * Deletes the first record that matches the specified criteria.
  *
  * @param table - The HolySheets table instance.
  */
@@ -160,32 +182,39 @@ async function deleteFirstRecord(
   const criteria = { Name: 'Bob' }
 
   try {
-    await table.deleteFirst({ where: criteria })
+    // Include metadata in the delete operation
+    const result = await table.deleteFirst({ where: criteria }, { includeMetadata: true })
     console.log(
-      '✅ Successfully deleted the first matching record for:',
+      '✅ First matching record deleted successfully for:',
       criteria
     )
+    // Log metadata
+    await logMetadata(result.metadata)
   } catch (error) {
     console.error('❌ Error deleting first record:', error)
   }
 }
 
 /**
- * Deletes all records matching the specified criteria.
+ * Deletes all records that match the specified criteria.
  *
  * @param table - The HolySheets table instance.
  */
 async function deleteMultipleRecords(
   table: HolySheets<{ Name: string; Age: string }>
 ) {
-  const criteria = { Name: {
+  const criteria = {
+    Name: {
       in: ['Alice', 'Charlie']
     }
   }
 
   try {
-    await table.deleteMany({ where: criteria })
-    console.log('✅ Successfully deleted all matching records for:', criteria)
+    // Include metadata in the delete operation
+    const result = await table.deleteMany({ where: criteria }, { includeMetadata: true })
+    console.log('✅ All matching records deleted successfully for:', criteria)
+    // Log metadata
+    await logMetadata(result.metadata)
   } catch (error) {
     console.error('❌ Error deleting multiple records:', error)
   }
@@ -223,5 +252,5 @@ async function executeAllOperations() {
   console.log('🎉 All operations completed.')
 }
 
-// Execute the operations
+// Execute operations
 executeAllOperations()
