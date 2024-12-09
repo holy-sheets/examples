@@ -12,8 +12,8 @@ importers:
         specifier: ^137.1.0
         version: 137.1.0
       holysheets:
-        specifier: file:../holysheets
-        version: file:../holysheets(googleapis@137.1.0)
+        specifier: ^2.0.0
+        version: 2.0.0(googleapis@137.1.0)
     devDependencies:
       '@types/node':
         specifier: ^22.10.1
@@ -340,8 +340,8 @@ packages:
     resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
     engines: {node: '>= 0.4'}
 
-  holysheets@file:../holysheets:
-    resolution: {directory: ../holysheets, type: directory}
+  holysheets@2.0.0:
+    resolution: {integrity: sha512-SccTGjt01QaCCYV4sZ1Cz727fMzoE22eoaT1ujIHhfPUn9HSyei68y5vzVR0ApGAfsGO11o9meuGOK+YvCc0lQ==}
     peerDependencies:
       googleapis: ^137.1.0
 
@@ -746,7 +746,7 @@ snapshots:
     dependencies:
       function-bind: 1.1.2
 
-  holysheets@file:../holysheets(googleapis@137.1.0):
+  holysheets@2.0.0(googleapis@137.1.0):
     dependencies:
       googleapis: 137.1.0
       uuid: 11.0.3
