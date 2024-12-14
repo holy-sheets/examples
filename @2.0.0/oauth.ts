@@ -17,9 +17,7 @@ const refreshToken = process.env.OAUTH_REFRESH_TOKEN as string
  *
  * @returns An instance of HolySheets configured with OAuth2 authentication.
  */
-async function initializeHolySheets(): Promise<
-  HolySheets<{ Name: string; Age: string }>
-> {
+async function initializeHolySheets(): Promise<HolySheets<{ Name: string; Age: string }>> {
   // Validate environment variables
   if (!spreadsheetId) {
     throw new Error(
@@ -31,13 +29,13 @@ async function initializeHolySheets(): Promise<
   }
 
   // Initialize OAuth2 client
-  const auth = new google.auth.OAuth2(clientId, clientSecret, redirectUri)
-  auth.setCredentials({ refresh_token: refreshToken })
+  const oauth2Client = new google.auth.OAuth2(clientId, clientSecret, redirectUri)
+  oauth2Client.setCredentials({ refresh_token: refreshToken })
 
   // Create an instance of HolySheets
   const sheets = new HolySheets({
     spreadsheetId,
-    auth
+    auth: oauth2Client
   })
 
   // Define the table (sheet) to operate on
