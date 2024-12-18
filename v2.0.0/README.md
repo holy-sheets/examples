@@ -1,5 +1,3 @@
-HolySheets v2.0.0 Examples
-
 # HolySheets v2.0.0 Examples
 
 This directory contains example scripts demonstrating how to use HolySheets v2.0.0. It includes examples for both OAuth2 and JWT-based authentication flows, as well as CRUD operations (insert, fetch, update, delete) on Google Sheets data.
@@ -12,13 +10,26 @@ This directory contains example scripts demonstrating how to use HolySheets v2.0
 ## Setup
 
 1.  **Install Dependencies**
-    From within this `v2.0.0` directory, run:
+
+From within this `v2.0.0` directory, run:
 
 ```bash
 pnpm install
 ```
 
-2.  **Create the `.env` File**
+2. **Create a Spreadsheet**
+
+> **Note:** You need to create a new sheet in your Google Spreadsheet named `holysheets` with the following columns: `Name` and `Age`.
+
+Here is an example of how your sheet should look:
+
+| Name    | Age |
+| ------- | --- |
+| Alice   | 30  |
+| Bob     | 25  |
+| Charlie | 35  |
+
+3.  **Create the `.env` File**
     Copy the provided `.env-example` file and update it with your credentials:
 
 ```bash
@@ -45,7 +56,7 @@ OAUTH_REFRESH_TOKEN="YOUR_OAUTH_REFRESH_TOKEN_HERE"
 > For JWT credentials, you must provide a valid service account JSON object as a single-line string.
 > For OAuth2, ensure you have a valid refresh token and other necessary credentials from the Google Cloud Console.
 
-3.  **Run Examples**
+4.  **Run Examples**
     You can run the examples using the following commands:
 
 - **JWT-based Example:**
