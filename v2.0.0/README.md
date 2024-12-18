@@ -25,7 +25,7 @@ pnpm install
 cp .env-example .env
 ```
 
-    Then edit the `.env` file with your specific values:
+Then edit the `.env` file with your specific values:
 
 ```bash
 # Spreadsheet ID
